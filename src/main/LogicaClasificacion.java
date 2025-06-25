@@ -41,21 +41,37 @@ public class LogicaClasificacion {
      */
     public boolean validarSimbolos(String expresion) {
         Stack<Character> pila = new Stack<>();
-        Map<Character, Character> pares = new HashMap<>();
-        pares.put(')', '(');
-        pares.put(']', '[');
-        pares.put('}', '{');
-
         for (char c : expresion.toCharArray()) {
-            if (pares.containsValue(c)) {
+        if (c == '(') {
+            pila.push(c);
+        } else {
+            if (c == '[') {
                 pila.push(c);
-            } else if (pares.containsKey(c)) {
-                
-                if (pila.isEmpty() || pila.pop() != pares.get(c)) {
-                    return false;
+            } else {
+                if (c == '{') {
+                    pila.push(c);
+                } else {
+                    if (c == ')') {
+                        if (pila.isEmpty()) return false;
+                        char abierto = pila.pop();
+                        if (abierto != '(') return false;
+                    } else {
+                        if (c == ']') {
+                            if (pila.isEmpty()) return false;
+                            char abierto = pila.pop();
+                            if (abierto != '[') return false;
+                        } else {
+                            if (c == '}') {
+                                if (pila.isEmpty()) return false;
+                                char abierto = pila.pop();
+                                if (abierto != '{') return false;
+                            }
+                        }
+                    }
                 }
             }
         }
+    }
         return pila.isEmpty();
     }
 
@@ -72,16 +88,16 @@ public class LogicaClasificacion {
         Stack<Integer> aux = new Stack<>();
         while (!pila.isEmpty()) {
             int temp = pila.pop();
-            // Mueve elementos de auxiliar a pila mientras sean mayores
-            while (!aux.isEmpty() && aux.peek() > temp) {
-                pila.push(aux.pop());
+                while (!aux.isEmpty() && aux.peek() > temp) {
+                    pila.push(aux.pop());
             }
             aux.push(temp);
         }
         List<Integer> resultado = new ArrayList<>();
         while (!aux.isEmpty()) {
-            resultado.add(aux.pop());
-        }
+        resultado.add(aux.pop());
+    }
+    Collections.reverse(resultado);
         return resultado;
     }
 
@@ -106,7 +122,6 @@ public class LogicaClasificacion {
                 impares.add(num);
             }
         }
-
         pares.addAll(impares);
         return pares;
     }
